@@ -1,0 +1,461 @@
+<%- include('../template/header'); %> <%- include('../template/sidebar'); %> <%-
+include('../template/navbar'); %>
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>Lelang</h2>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+      <li class="breadcrumb-item active">
+        <strong>Lelang</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-lg-2"></div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox">
+        <div class="ibox-title align-items-center p-2">
+            <button class="btn btn-primary btn-tambah ml-2 mt-2 animated fadeIn">
+                <i class="fa fa-plus mr-1"></i>Lelang Barang
+            </button>
+            <form class="m-4 animated fadeIn form-lelang d-none" method="POST">   
+                <input type="hidden" name="item_id">
+                <h3>Lelang Barang</h3>
+                <div class="row">        
+                    <div class="form-group col-md-12">
+                        <label for="" class="d-block">Barang*</label>
+                        <div class="input-group ">
+                            <input type="text" class="form-control" name="name" disabled placeholder="Nama Barang">
+                            <div class="input-group-append">
+                                <button  class="btn btn-secondary btn-outline" type="button" data-toggle="modal" data-target="#modal-barang">Pilih Barang</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="font-normal">Tanggal Mulai*</label>
+                            <div class="input-group date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" name="start_date" class="form-control" autocomplete="off" >
+                            </div>
+                        </div>
+                        <div class="input-group clockpicker"  data-autoclose="true">
+                            <span class="input-group-addon">
+                                <span class="fa fa-clock-o"></span>
+                            </span>
+                            <input type="text" class="form-control" name="start_time" autocomplete="off" >
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="font-normal">Tanggal Selesai</label>
+                            <div class="input-group date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" name="end_date" class="form-control" disabled autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="input-group clockpicker"  data-autoclose="true">
+                            <span class="input-group-addon">
+                                <span class="fa fa-clock-o"></span>
+                            </span>
+                            <input type="text" class="form-control"  name="end_time" disabled autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 d-flex justify-content-end" >
+                    <button type="reset" class="btn btn-secondary mr-1 btn-batal">Batal</button>
+                    <button type="submit" class="ladda-button btn btn-primary btn-simpan">Simpan</button>
+                </div>
+            </form>
+        </div>
+        <div class="ibox-content">
+            <div class="table-responsive">
+            <table
+                class="table table-striped table-bordered table-hover table-auctions"
+                style="width: 100%"
+            >
+                <thead>
+                <tr>
+                    <th style="width:4%">No</th>
+                    <th>Nama Barang</th>
+                    <th>Tanggal Mulai</th>
+                    <th>Tanggal Berakhir</th>
+                    <th>Status</th>
+                    <th class="" style="width: 5%;">Aksi</th>
+                </tr>
+                </thead>
+                <tbody>         
+                   
+                </tbody>
+                <tfoot>
+                <tr>
+                    <tr>
+                    <th></th>
+                    <th>Nama Barang</th>
+                    <th>Tanggal Mulai</th>
+                    <th>Tanggal Berakhir</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                    </tr>
+                </tr>
+                </tfoot>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modal-barang" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+      
+        <div class="modal-body">
+            <h2 class="modal-title mb-1">Data Barang</h2>
+            <div class="table-responsive">
+                <table 
+                style="width: 100%;"
+                class="table table-striped table-bordered table-hover table-items toggle-arrow-tiny" data-page-size="15"
+                >
+                    <thead>
+                        <tr>
+                        <th style="width: 5%;"></th>
+                        <th>Nama</th>
+                        <th>Harga</th>
+                        <th style="width: 5%;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                     
+                    </tbody>  
+                </table>
+            </div>  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<%- include('../template/footer'); %>
+<script src="js/plugins/dataTables/datatables.min.js"></script>
+<script src="js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+<!-- ladda -->
+<script src="js/plugins/ladda/spin.min.js"></script>
+<script src="js/plugins/ladda/ladda.min.js"></script>
+<script src="js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<!-- Data picker -->
+<script src="js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<!-- Clock picker -->
+<script src="js/plugins/clockpicker/clockpicker.js"></script>
+<!-- Sweet Alert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.js"></script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    function renderBtnChoose({id,name}){
+        return `<button data-dismiss="modal" type="button" class="btn btn-warning btn-xs btn-pilih" data-id="${id}"
+                    data-name=${name} >Pilih</button>`
+    }
+    const tableItems = () =>{
+        const items =  $('.table-items').DataTable( {
+            pageLength: 25,
+            responsive: true,
+            ajax: "/auctions/api/items",
+            columns: [
+                { data: "id"},
+                { data: "name" },
+                { data: "price" },
+                { data: {
+                    id: "id",
+                    name: "name"
+                }
+            }
+            ],
+            columnDefs: [ {
+                searchable: false,
+                orderable: false,
+                targets: 0
+            },
+          
+            {
+                render: renderBtnChoose,
+                searchable: false,
+                orderable: false,
+                targets: 3
+            } ],
+            order: [[ 1, 'asc' ]]
+        })
+
+        items.on( 'order.dt search.dt', function () {
+            items.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            });
+        } ).draw();
+    }
+
+    function renderDate(date){
+        
+        return date? new Intl.DateTimeFormat('id').format(new Date(date)) +" "+ new Date(date).toLocaleTimeString() : "-"
+    }
+    function renderStatus(status){
+        return `<span class="bagde badge-pill badge-${status === 'open' ? 'primary' : 'danger'}">${status} </span>`
+    }
+
+    function renderBtnAction({id,end_date}){
+        return `
+            <div class="btn-group">
+                ${!end_date?`<button class="btn-success btn btn-xs btn-close-auction" data-id="${id}"">Tutup Lelang</button>`:''}
+                <button class="btn-warning btn btn-xs btn-ubah" data-id="${id}">Ubah</button>
+                <button class="ladda-button  btn-danger btn btn-xs btn-hapus"  data-style="slide-up" data-id="${id}">Hapus</button>
+            </div>
+        `
+    }
+    
+    const tableAuctions = () =>{
+        const auctions = $(".table-auctions").DataTable({     
+            pageLength: 25,
+            responsive: true,
+            ajax: "/auctions/api/auctions",
+            columns: [
+                { data: "id"},
+                { data: "name" },
+                { data: "start_date" },
+                { data: "end_date" },
+                { data: "status" },
+                { data: {
+                    id: "id",
+                    end_date: "end_date"
+                    }
+                 },
+            ],
+            columnDefs: [ {
+                searchable: false,
+                orderable: false,
+                targets: 0
+            },{
+                render: renderDate,
+                targets: 2
+            },{
+                render: renderDate,
+                targets: 3
+            },{
+                render: renderStatus,
+                targets: 4
+            },{
+                render: renderBtnAction,
+                targets: 5
+            }],
+       });
+       auctions.on( 'order.dt search.dt', function () {
+        auctions.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            });
+        } ).draw();
+    }
+
+    function toggleForm(show=false){
+        if(show){
+            $('.btn-tambah').addClass("d-none").removeClass("d-block")
+            $(".form-lelang").addClass("d-block").removeClass("d-none")
+           
+        }else{
+            $('.btn-tambah').addClass("d-block").removeClass("d-none")
+            $(".form-lelang").addClass("d-none").removeClass("d-block") 
+            $('input[name=end_date]').attr('disabled',true)
+            $('input[name=end_time]').attr('disabled',true)
+        }
+    }
+</script>
+<script>
+    let edit = false
+ 
+    tableItems()
+    tableAuctions()
+
+
+    const socket = io();
+ 
+    socket.on("statusChanged",()=>{
+        $('.table-auctions').DataTable().ajax.reload()
+    });
+
+    $('.btn-tambah').click(function(){  
+        $('.table-items').DataTable().ajax.reload()
+        $('form').trigger("reset")
+        toggleForm(true)
+    })
+
+    $('.btn-batal').click(()=>{
+        toggleForm(false)
+        edit = false
+    })
+
+    $(document).on('click','.btn-pilih',function(){
+       const id =  $(this).data("id")
+       const name = $(this).data("name")
+       $('input[name=item_id]').val(id)
+       $('input[name=name]').val(name)
+
+    })
+    $(document).on('click','.btn-close-auction',async function(){
+        const l =await Ladda.create(this)
+        l.start()
+        const id = $(this).data('id')
+        fetch(`/auctions/close/${id}`,{
+            method: "PUT"
+        }).then((res)=>{
+            if(res.status==200){
+                toastr.success('Lelang berhasil ditutup',"Success")
+                $('.table-auctions').DataTable().ajax.reload()
+            }
+            else
+                toastr.error('Kesalahan saat menutup lelang','Error')
+            l.stop()
+        })
+    })
+    $(document).on('click','.btn-ubah',function(){
+        const l = Ladda.create(this)
+        l.start()
+        const id = $(this).data('id')
+        fetch(`/auctions/find/${id}`).then(res=>res.json()).then(res=>{
+            $('.form-lelang').attr('data-id',res.data.id)
+            $('input[name=item_id]').val(res.data.item_id)
+            $('input[name=name]').val(res.data.name)
+            $('input[name=start_date').val(dateToMDY(res.data.start_date))
+            $('input[name=start_time').val(dateToTime(res.data.start_date))
+            $('input[name=end_date').val(res.data.end_date ? dateToMDY(res.data.end_date) : "")
+            $('input[name=end_time').val(res.data.end_date ? dateToTime(res.data.end_date) : "")
+            const startEndDate = new Date(parseInt(new Date(res.data.start_date).getTime())+1000 * 60 * 60 * 24) 
+            $("input[name=end_date]").datepicker('setStartDate',startEndDate );
+            setActiveEndDate()
+            edit = true;
+            toggleForm(true)
+            l.stop()
+        })
+    })
+    $(document).on('click','.btn-hapus',function(){
+        const id = $(this).data("id")
+        Swal.fire({
+            icon: "question",
+          title: 'Yakin ingin menghapus data?',
+          showDenyButton: true,
+          showCancelButton: true,
+          showConfirmButton: false,
+          denyButtonText: `Hapus`
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+            if (result.isDenied) {
+                fetch(`/auctions/${id}`,{
+                    method: "DELETE"
+                }).then(res=>{
+                    if(res.status==200)
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Data berhasil dihapus!',
+                        }).then(result=>{
+                            $('.table-auctions').DataTable().ajax.reload()
+                        })
+                    else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erorr',
+                            text: 'Kesahalah menghapus data!',
+                        })
+                    }
+                }).catch(e=>{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erorr',
+                        text: 'Kesahalah menghapus data!',
+                    })
+                })
+            }
+        })
+    })
+
+    $('.form-lelang').submit(async function(e){
+        const l = await Ladda.create(document.querySelector('.ladda-button'));
+        l.start();
+        e.preventDefault();
+        
+        var data = $('.form-lelang').serializeArray().reduce(function(obj, item) {
+            
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+        fetch("/auctions/" + (edit ? $(this).data('id') : ''),{
+            method: edit ? "PUT" : "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify(data)
+        }).then(res=>{
+            if(res.status==200){
+                if(edit)
+                    toastr.success('Berhasil di ubah',"Success")
+                else
+                    toastr.success('Barang berhasil di lelang',"Success")
+                edit = false
+                $('.table-auctions').DataTable().ajax.reload()
+                toggleForm(false)
+            }
+            else{
+                toastr.error( 'Kesalahan Menyimpan Data lelang','Error');
+                edit = false
+            }
+            l.stop()
+        })
+
+    })
+
+    const start = $("input[name=start_date]")
+    const endDate = $("input[name=end_date]")
+    endDate.datepicker()
+    start.datepicker({
+        todayBtn: "linked",
+        startDate: "0",
+    }).on("changeDate",(res)=>{ 
+        const startEndDate = new Date(parseInt(res.date.getTime())+1000 * 60 * 60 * 24) 
+        endDate.datepicker('setStartDate',startEndDate );
+        setActiveEndDate()
+    })
+    // clock
+    $('.clockpicker').clockpicker();
+    $('input[name=start_time]').change(()=>{
+        setActiveEndDate();
+    })
+    function setActiveEndDate(){
+        if($("input[name=start_date]").val() !=="" && $('input[name=start_time]').val() !==""){
+           
+            $("input[name=end_date]").removeAttr("disabled")
+            $('input[name=end_time]').removeAttr("disabled")
+        }
+    }
+    function dateToMDY(dbDate) {
+        const date = new Date(dbDate)
+        var d = date.getDate();
+        var m = date.getMonth() + 1; //Month from 0 to 11
+        var y = date.getFullYear();
+        return "" + (m <= 9 ? "0" + m : m) + "/" + (d <= 9 ? "0" + d : d) + "/"+ y;
+    }
+    function dateToTime(dbDate){
+        const date = new Date(dbDate)
+        const h = date.getHours()
+        const m = date.getMinutes()
+        return "" +(h<=9 ? "0" + h: h) + ":"+ (m<=9 ? "0" + m : m)
+    }
+</script>
+
+
+
+
+
+<%- include('../template/htmlClose'); %>

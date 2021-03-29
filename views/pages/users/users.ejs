@@ -1,0 +1,159 @@
+<%- include('../../template/header'); %> 
+<%- include('../../template/sidebar'); %> 
+<%- include('../../template/navbar'); %>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>Data User</h2>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+      <li class="breadcrumb-item active">
+        <strong>Data User</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-lg-2"></div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox">
+        <div class="ibox-title align-items-center pb-1">
+          <h2>User</h2>
+          <div class="ibox-tools">
+            <a href="/users/add"class="btn btn-primary btn-tambah">
+              <i class="fa fa-plus mr-1"></i>Tambah
+            </a>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <div class="table-responsive">
+            <table
+              class="table table-striped table-bordered table-hover table-users toggle-arrow-tiny" data-page-size="15"
+            >
+              <thead>
+                <tr>
+                  <th style="width:4%">No</th>
+                  <th>Username</th>
+                  <th>Nama</th>
+                  <th>Whatsapp</th>
+                  <th>Email</th>
+                  <th>Jenis Kelamin</th>
+                  <th>Level</th>
+                  <th style="width: 5%;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for(let i=0; i < users.length; i++) { %>
+                  <tr>
+                    <td><%= i+1 %></td>
+                    <td><%= users[i].username %></td>
+                    <td><%= users[i].name %></td>
+                    <td><%= users[i].whatsapp_number %></td>
+                    <td><%= users[i].email %></td>
+                    <td><%= users[i].gender %></td>
+                    <td><%= users[i].role %></td>
+                    <td class="text-right footable-visible footable-last-column">
+                      <div class="btn-group">
+                        <a href="/users/edit/<%=users[i].user_id%>" class="btn-warning btn btn-xs btn-ubah">Ubah</a>
+                        <button type="button" class="btn-danger btn btn-xs btn-hapus" data-id="<%=users[i].user_id%>">Hapus</button>
+                      </div>
+                    </td>
+                  </tr>
+               <% } %>
+               
+              </tbody>
+              <tfoot>
+                <tr>
+                  <tr>
+                    <th>No</th>
+                    <th>Username</th>
+                    <th>Nama</th>
+                    <th >Whatsapp</th>
+                    <th >Email</th>
+                    <th >Jenis Kelamin</th>
+                    <th >Level</th>
+                    <th>Aksi</th>
+                  </tr>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../../template/footer'); %>
+<!-- datatable -->
+<script src="js/plugins/dataTables/datatables.min.js"></script>
+<script src="js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Ladda -->
+<script src="js/plugins/ladda/spin.min.js"></script>
+<script src="js/plugins/ladda/ladda.min.js"></script>
+<script src="js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.js"></script>
+<script>
+      <% if(status.length >0) { %>
+      <% if(status[0] === 200) { %>
+        toastr.success('<%=msg[0]%>','Berhasil');
+      <% }else{ %>
+        toastr.error('<%=msg[0]%>','Gagal');
+      <% } %>
+    <% } %>
+</script>
+<script>
+    $(document).ready(function(){
+        $(".table-users").DataTable({
+            pageLength: 25,
+            responsive: true,
+        });
+
+        $('.btn-hapus').click(function(){
+            const id = $(this).data("id");
+            Swal.fire({
+              icon: "question",
+              title: 'Yakin ingin menghapus data?',
+              showDenyButton: true,
+              showCancelButton: true,
+              showConfirmButton: false,
+              denyButtonText: `Hapus`
+            }).then( (result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isDenied) {
+                fetch(`/users/${id}`,{
+                    method: 'DELETE'
+                }).then((res)=>{
+                    if(res.status==200)
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data berhasil dihapus!',
+                        }).then(result=>{
+                            location.reload()
+                        })
+                    else
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Data gagal dihapus!',
+                            })
+                }).catch(error=>{
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Gagal',
+                      text: 'Data gagal dihapus!',
+                    })
+                })
+            } 
+            })
+        })
+    })
+    
+</script>
+
+<%- include('../../template/htmlClose'); %>

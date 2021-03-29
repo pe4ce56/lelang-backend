@@ -1,0 +1,388 @@
+<%- include('../../template/header'); %>
+ <%- include('../../template/sidebar');%> 
+ <%- include('../../template/navbar'); %>
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>Tambah Data</h2>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="/items">Data Barang</a>
+      </li>
+      <li class="breadcrumb-item active">
+        <strong>Tambah Data</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-lg-2"></div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+ 
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="ibox">
+     
+        <div class="ibox-content">
+          <div class="peringatan">
+          
+          
+          </div>
+          <h4 class="mt-2">Tambah data barang</h4>
+          <div id="wizard">
+            <h1>Detail</h1>
+            <div class="step-content">
+              <div class="panel-body">
+                <form id="form-create">
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Nama:</label>
+                    <div class="col-sm-10">
+                      <input
+                        type="text"
+                        class="form-control input"
+                        placeholder="Nama Produk"
+                        name="name"
+                      />
+                      <div class="invalid-feedback">
+                        Nama produk tidak boleh kosong
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Harga:</label>
+                    <div class="col-sm-10">
+                      <input
+                        type="text"
+                        class="form-control input"
+                        placeholder="20000000"
+                        name="price"
+                      />
+                      <div class="invalid-feedback">
+                        Harga tidak boleh kosong
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Kategori:</label>
+                    <div class="col-sm-10">
+                      <select
+                        class="form-control input"
+                        name="category_id"
+                      ></select>
+                      <div class="invalid-feedback">
+                        Kategori harus dipilih
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Deskripsi:</label>
+                    <div class="col-sm-10">
+                      <div class="description"></div>
+                    </div>
+                  </div>
+                </form>
+               
+              </div>
+            </div>
+
+            <h1>Gambar</h1>
+            <div class="step-content">
+              <div class="panel-body">
+                <button
+                  class="btn btn-primary float-right"
+                  data-toggle="modal"
+                  data-target="#modal-dropzone"
+                >
+                  <i class="fa fa-plus"></i>
+                  Upload
+                </button>
+                <div class="table-responsive mt-5">
+                  <table class="table table-bordered table-stripped table-img">
+                    <thead>
+                      <tr>
+                        <th>Image preview</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- end row -->
+</div>
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="modal-dropzone"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form
+            action="/items/uploamp"
+            method="POST"
+            class="dropzone"
+            id="dropzoneForm"
+          >
+            <div class="fallback">
+              <input name="file" type="file" multiple />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end Modal -->
+
+  <%- include('../../template/footer'); %>
+  <!-- SUMMERNOTE -->
+  <script src="/js/plugins/summernote/summernote-bs4.js"></script>
+
+  <!-- ladda -->
+  <script src="/js/plugins/ladda/spin.min.js"></script>
+  <script src="/js/plugins/ladda/ladda.min.js"></script>
+  <script src="/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Steps -->
+  <script src="/js/plugins/steps/jquery.steps.min.js"></script>
+
+  <script>
+    function templateHTML({ img, url }) {
+      return `<tr>
+        <td>
+          <img style="height:100px" src="${url}" />
+        </td>
+
+
+        <td>
+          <button class="btn btn-danger btn-delete" data-img="${img}">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+        `;
+    }
+    function getCategories(){
+      fetch("/categories/all").then((res) =>
+        res.json().then((res) => {
+          let html = `<option disable selected value="">-- Pilih kategori --</option>`;
+          for (let i in res) {
+            html += `<option value="${res[i].id}">${res[i].name}</option>`;
+          }
+          $("select[name=category_id]").html(html);
+        })
+      );
+    }
+    var path = "<%=req%>";
+    const socket = io();
+    let dropzoneUrl = "";
+    let imageData = [];
+    let idSocket = "";
+    socket.on("connect", () => {
+      idSocket = socket.id;
+      dropzoneUrl = `/items/uploadTemp/${socket.id}`;
+    });
+
+    Dropzone.options.dropzoneForm = {
+      addRemoveLinks: true,
+      paramName: "file", // The name that will be used to transfer the file
+      maxFilesize: 2, // MB,
+      init: function () {
+        this.on("processing", function (file) {
+          this.options.url = dropzoneUrl;
+        });
+      },
+      accept: function (file, done) {
+        const extension = file.name.split(".");
+        const listExtension = ["jpg", "png","jpeg"];
+        const image = listExtension.includes(extension[extension.length - 1]);
+        if (!image) {
+          done("File harus bertipe gambar (jpg,jpeg,png)");
+        } else {
+          done();
+        }
+      },
+      success: (res) => {
+        if (res.status === "success") {
+          const response = JSON.parse(res.xhr.response);
+          const html = templateHTML({
+            url: `/items_image/temp/${idSocket}/${response.name}`,
+            img: response.name,
+          });
+          imageData.push(response.name);
+          $(".table-img").append(html);
+          $(".dz-preview").remove();
+          $(".dropzone").removeClass("dz-started");
+          $("#modal-dropzone").modal("hide");
+        }
+      },
+      removedfile: function (file) {
+        var name = file.name;
+        var _ref;
+        return (_ref = file.previewElement) != null
+          ? _ref.parentNode.removeChild(file.previewElement)
+          : void 0;
+      },
+      dictDefaultMessage:
+        "<strong>Drop files here or click to upload. </strong>",
+    };
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        showMethod: "slideDown",
+        timeOut: 4000,
+      };
+
+    $(document).ready(function () {  
+      getCategories()
+    
+      $(".description").summernote({
+        height: 100,
+        toolbar: [
+          // [groupName, [list of button]]
+          ["style", ["bold", "italic", "underline", "clear"]],
+          ["font", ["strikethrough", "superscript", "subscript"]],
+          ["para", ["ul", "ol", "paragraph"]],
+          ["height", ["height"]],
+        ],
+      });
+
+    
+      $(document).on("click", ".btn-delete", async function () {
+
+        const l = await Ladda.create(this);
+        l.start();
+        const img = $(this).data("img");
+        await fetch(`${path}/deleteImageTemp/${idSocket}/${img}`, {
+          method: "DELETE",
+        }).then((res) => {
+          imageData = imageData.filter((f) => f !== img);
+          if (res.status == 200) {
+            $(this).parent().parent().remove();
+            toastr.success("Gambar dihapus", "Berhasil");
+          } else toastr.error("Gambar gagal dihapus", "Gagal");
+        });
+
+        l.stop();
+
+      });
+      $("#wizard").steps({
+        onStepChanging: function (event, currentIndex, newIndex)
+          {
+            let isValid = true;
+            $("#form-create .input").each((i, elem) => {
+              if ($(elem).val() == "") {
+                $(elem).addClass("required error is-invalid");
+                $(elem).focus();
+                isValid = false;
+              }else{
+                $(elem).removeClass("required error is-invalid");
+              }
+            });
+            
+            if (!isValid) {
+              return false;
+            }
+            return true;
+          },
+          
+        onFinished: async function (event, currentIndex)
+          {
+            // pregress bar
+            $('.peringatan').html(`  
+                  <div class="progress">
+                      <div class="progress-bar progress-bar-striped progress-bar-primary" style="width: 0%" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>`)
+            const data = {
+              name: $("input[name=name]").val(),
+              price: $("input[name=price]").val(),
+              category_id: $("select[name=category_id]").val(),
+              description: $(".description").summernote("code"),
+              images: imageData,
+              folderTemp: idSocket,
+            };
+
+            // fetching data
+           const res =  await fetch(path, {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+
+            const reader = res.body.getReader();
+            const contentLength = res.headers.get("Content-Length");
+          
+            let receivedLength = 0; // received that many bytes at the moment
+            let chunks = []; // array of received binary chunks (comprises the body)
+            while(true) {
+              const {done, value} = await reader.read();
+
+              if (done) {
+                break;
+              }
+
+              chunks.push(value);
+              receivedLength += value.length;
+              const percentage =  receivedLength/contentLength*100
+              $(".peringatan .progress-bar ").css("width",`${percentage}%`)
+            }
+            setTimeout(()=>{
+              
+              if (res.status == 200){
+                toastr.success("Data berhasil disimpan", "Berhasil");
+                $('.peringatan').html(`
+                <div class="alert alert-success alert-dismissable success ">
+                  <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                  Data berhasil disimpan !!
+                </div>`)
+              }
+              else{
+                toastr.error("Data gagal disimpan", "Gagal");
+                $('.peringatan').html(`
+                <div class="alert alert-danger alert-dismissable danger">
+                  <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                  Data gagal disimpan !!
+                </div>`)
+              } 
+            
+            },700)
+          }
+          
+      });
+    });
+  </script>
+
+  <%- include('../../template/htmlClose'); %>
+</div>
