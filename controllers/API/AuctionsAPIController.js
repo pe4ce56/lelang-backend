@@ -1,6 +1,7 @@
 const express = require("express");
 const apiAuctions = express.Router();
 const knex = require("../../config/database");
+const { authenticateToken } = require("./AuthAPIController");
 function joinOutput(input) {
   const hydrated = [],
     lookup = {};
@@ -37,7 +38,8 @@ apiAuctions.get("/", async (req, res) => {
       .innerJoin("items", "auctions.item_id", "items.id")
       .innerJoin("images", "items.id", "images.item_id")
       .innerJoin("categories", "items.category_id", "categories.id")
-      .orderBy("status", "asc");
+      .orderBy("status", "asc")
+      .orderBy("sort_order", "asc");
     // .where("status", "=", "open");
     auctions = joinOutput(auctions);
     return res.status(200).json({ data: auctions });
@@ -46,6 +48,143 @@ apiAuctions.get("/", async (req, res) => {
   }
 });
 
+apiAuctions.get("/search/:name", async (req, res) => {
+  try {
+    const { name } = req.params;
+    let auctions = await knex("auctions")
+      .select([
+        "*",
+        "auctions.id as auctions_id",
+        "categories.name as category_name",
+        "items.name as item_name",
+        "images.id as image_id",
+      ])
+      .innerJoin("items", "auctions.item_id", "items.id")
+      .innerJoin("images", "items.id", "images.item_id")
+      .innerJoin("categories", "items.category_id", "categories.id")
+      .where("items.name", "like", `%${name}%`)
+      .orderBy("status", "asc");
+    // .where("status", "=", "open");
+    auctions = joinOutput(auctions);
+    return res.status(200).json({ data: auctions });
+  } catch (e) {
+    return res.status(401).json({ msg: "Data gagal diambil", error: e });
+  }
+});
+apiAuctions.get("/category/:category_name/:product_name", async (req, res) => {
+  try {
+    let auctions = await knex("auctions")
+      .select([
+        "*",
+        "auctions.id as auctions_id",
+        "categories.name as category_name",
+        "items.name as item_name",
+        "images.id as image_id",
+      ])
+      .innerJoin("items", "auctions.item_id", "items.id")
+      .innerJoin("images", "items.id", "images.item_id")
+      .innerJoin("categories", "items.category_id", "categories.id")
+      .where("categories.name", "=", req.params.category_name)
+      .andWhere("items.name", "like", `%${req.params.product_name}%`)
+      .orderBy("status", "asc")
+      .orderBy("auctions.id", "desc");
+    console.log(auctions);
+    auctions = joinOutput(auctions);
+    return res.status(200).json({ data: auctions });
+  } catch (e) {
+    return res.status(401).json({ msg: "Data gagal diambil", error: e });
+  }
+});
+apiAuctions.get("/category/:category_name/", async (req, res) => {
+  try {
+    let auctions = await knex("auctions")
+      .select([
+        "*",
+        "auctions.id as auctions_id",
+        "categories.name as category_name",
+        "items.name as item_name",
+        "images.id as image_id",
+      ])
+      .innerJoin("items", "auctions.item_id", "items.id")
+      .innerJoin("images", "items.id", "images.item_id")
+      .innerJoin("categories", "items.category_id", "categories.id")
+      .where("categories.name", "=", req.params.category_name)
+      .orderBy("status", "asc")
+      .orderBy("auctions.id", "desc");
+    auctions = joinOutput(auctions);
+
+    return res.status(200).json({ data: auctions });
+  } catch (e) {
+    return res.status(401).json({ msg: "Data gagal diambil", error: e });
+  }
+});
+apiAuctions.get("/home/category/:category_id", async (req, res) => {
+  try {
+    let auctions = await knex("auctions")
+      .select([
+        "*",
+        "auctions.id as auctions_id",
+        "categories.name as category_name",
+        "items.name as item_name",
+        "images.id as image_id",
+      ])
+      .innerJoin("items", "auctions.item_id", "items.id")
+      .innerJoin("images", "items.id", "images.item_id")
+      .innerJoin("categories", "items.category_id", "categories.id")
+      .where("categories.id", "=", req.params.category_id)
+      .orderBy("status", "asc")
+      .orderBy("auctions.id", "desc");
+    auctions = joinOutput(auctions);
+    auctions.splice(3, auctions.length - 4);
+
+    return res.status(200).json({ data: auctions });
+  } catch (e) {
+    return res.status(401).json({ msg: "Data gagal diambil", error: e });
+  }
+});
+apiAuctions.get("/open", async (req, res) => {
+  try {
+    let auctions = await knex("auctions")
+      .select([
+        "*",
+        "auctions.id as auctions_id",
+        "categories.name as category_name",
+        "items.name as item_name",
+        "images.id as image_id",
+      ])
+      .innerJoin("items", "auctions.item_id", "items.id")
+      .innerJoin("images", "items.id", "images.item_id")
+      .innerJoin("categories", "items.category_id", "categories.id")
+      .where("status", "=", "open")
+      .orderBy("status", "asc");
+    auctions = joinOutput(auctions);
+    return res.status(200).json({ data: auctions });
+  } catch (e) {
+    return res.status(401).json({ msg: "Data gagal diambil", error: e });
+  }
+});
+apiAuctions.get("/single", async (req, res) => {
+  try {
+    let auctions = await knex("auctions")
+      .select([
+        "*",
+        "auctions.id as auctions_id",
+        "categories.name as category_name",
+        "items.name as item_name",
+        "images.id as image_id",
+      ])
+      .innerJoin("items", "auctions.item_id", "items.id")
+      .innerJoin("images", "items.id", "images.item_id")
+      .innerJoin("categories", "items.category_id", "categories.id")
+      .orderBy("status", "asc");
+
+    // .where("status", "=", "open");
+    auctions = joinOutput(auctions);
+    return res.status(200).json({ data: auctions[0] });
+  } catch (e) {
+    return res.status(401).json({ msg: "Data gagal diambil", error: e });
+  }
+});
 apiAuctions.get("/:id", async (req, res) => {
   try {
     let auctions = await knex("auctions")
@@ -69,55 +208,13 @@ apiAuctions.get("/:id", async (req, res) => {
   }
 });
 
-apiAuctions.get("/wishlist/:client_id", async (req, res) => {
-  try {
-    const { client_id } = req.params;
-    let data = await knex("wishlist")
-      .select([
-        "wishlist.*",
-        "wishlist.id as wishlist_id",
-        "items.*",
-        "images.*",
-      ])
-      .innerJoin("auctions", "wishlist.auction_id", "auctions.id")
-      .innerJoin("items", "auctions.item_id", "items.id")
-      .innerJoin("images", "items.id", "images.item_id")
-      .where("wishlist.client_id", "=", client_id);
-    data = joinOutput(data);
-    return res.status(200).json({ data });
-  } catch (error) {
-    return res.status(400).json({ msg: "Gagal", error });
-  }
-});
-
-apiAuctions.post("/wishlist", async (req, res) => {
-  try {
-    const { auction_id, client_id } = req.body;
-    await knex("wishlist").insert({ auction_id, client_id });
-    return res.status(200).json({ msg: "Berhasil" });
-  } catch (error) {
-    return res.status(400).json({ msg: "Gagal" });
-  }
-});
-apiAuctions.delete("/wishlist", async (req, res) => {
-  try {
-    const { auction_id, client_id } = req.body;
-    await knex("wishlist")
-      .where("auction_id", "=", auction_id)
-      .where("client_id", "=", client_id)
-      .delete();
-    return res.status(200).json({ msg: "Berhasil" });
-  } catch (error) {
-    return res.status(400).json({ msg: "Gagal" });
-  }
-});
-
 apiAuctions.get("/bid/:auction_id", async (req, res) => {
   try {
     const { auction_id } = req.params;
     const auctionsMax = knex("histories")
       .max("histories.offers", { as: "current_bid" })
-      .as("current_bid").where("histories.auction_id","=",auction_id);
+      .as("current_bid")
+      .where("histories.auction_id", "=", auction_id);
     let data = await knex("auctions")
       .select([
         "histories.*",
@@ -137,7 +234,7 @@ apiAuctions.get("/bid/:auction_id", async (req, res) => {
     return res.status(400).json({ msg: "Gagal", error });
   }
 });
-apiAuctions.post("/bid", async (req, res) => {
+apiAuctions.post("/bid", authenticateToken, async (req, res) => {
   const { auction_id, client_id, offers } = req.body;
   try {
     const bid = await knex("auctions")
@@ -150,8 +247,11 @@ apiAuctions.post("/bid", async (req, res) => {
         );
       });
     if (bid) {
-      const data = await knex("histories").select(["name","histories.id","offers"]).innerJoin("clients","histories.client_id","clients.id").where("histories.id","=",bid);
-      return res.status(200).json({ msg: "Berhasil" ,data});
+      const data = await knex("histories")
+        .select(["name", "histories.id", "offers"])
+        .innerJoin("clients", "histories.client_id", "clients.id")
+        .where("histories.id", "=", bid);
+      return res.status(200).json({ msg: "Berhasil", data });
     }
     return res.status(400).json({ msg: "Lelang sudah ditutup" });
   } catch (error) {
@@ -173,7 +273,7 @@ apiAuctions.get("/comments/:auction_id", async (req, res) => {
     return res.status(400).json({ msg: "Gagal", error });
   }
 });
-apiAuctions.post("/comment", async (req, res) => {
+apiAuctions.post("/comment", authenticateToken, async (req, res) => {
   const { auction_id, client_id, text } = req.body;
   try {
     await knex("comments").insert({ auction_id, client_id, text });

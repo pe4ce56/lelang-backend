@@ -1,0 +1,53 @@
+<%- include('../template/header'); %> <%- include('../template/sidebar'); %> <%-
+include('../template/navbar'); %>
+
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="ibox">
+        <div class="ibox-title">
+          <span class="label label-warning float-right">Belom dilelang</span>
+          <h5>Jumlah Barang</h5>
+        </div>
+        <div class="ibox-content">
+          <h1 class="no-margins"><%= items.isNotAuctions || 0 %></h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="ibox">
+        <div class="ibox-title">
+          <span class="label label-info float-right">Sudah dilelang</span>
+          <h5>Jumlah Barang</h5>
+        </div>
+        <div class="ibox-content">
+          <h1 class="no-margins"><%= items.isAuctions || 0 %></h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="ibox">
+        <div class="ibox-title">
+          <span class="label label-primary float-right">Open</span>
+          <h5>Jumlah Lelang</h5>
+        </div>
+        <div class="ibox-content">
+          <h1 class="no-margins"><%=auctions.isAuctions || 0 %></h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="ibox">
+        <div class="ibox-title">
+          <span class="label label-danger float-right">Close</span>
+          <h5>Jumlah Lelang</h5>
+        </div>
+        <div class="ibox-content">
+          <h1 class="no-margins"><%=auctions.isNotAuctions || 0 %></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../template/footer'); %>

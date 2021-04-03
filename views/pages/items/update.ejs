@@ -198,7 +198,6 @@
   let idSocket = "";
   let dropzoneUrl = "";
   let imageData = [];
-
   // get image from data res
   <% for(let [id,image] of item.images.entries()) { %>
     imageData.push({path: "<%=image.path%>",sort_order: "<%= image.sort_order%>"})
@@ -306,7 +305,6 @@
         imageData = imageData.filter((f) => f.path !== img);
         if (res.status == 200) {
           $(this).parent().parent().remove();
-          toastr.success("Gambar dihapus", "Berhasil");
         } else toastr.error("Gambar gagal dihapus", "Gagal");
       })
       l.stop()
@@ -418,8 +416,9 @@
   });
 
   async function getCategories() {
-    await fetch("/categories/all").then((res) =>
+    await fetch("/items/categories/all").then((res) =>
       res.json().then((res) => {
+        console.log(res)
         let html = `<option disable selected value="">-- Pilih kategori --</option>`;
         for (let i in res) {
           html += `<option value="${res[i].id}">${res[i].name}</option>`;

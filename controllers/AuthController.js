@@ -6,8 +6,8 @@ const knex = require("../config/database");
 
 routerAuth.get("/", (req, res) => {
   if (req.session.user) return res.redirect("/dashboard");
-
-  return res.render("auth/login");
+  console.log("login", req.flash());
+  return res.render("auth/login", { err: req.flash("login") || "" });
 });
 
 routerAuth.post("/login", async (req, res) => {
@@ -19,15 +19,16 @@ routerAuth.post("/login", async (req, res) => {
     const data = await knex("users")
       .innerJoin("operators", "operators.user_id", "users.id")
       .where("username", "=", username)
-      .where("password", "=", hashPassword);
-    console.log(data);
+      .where("password", "=", hashPassword)
+      .where("role", "<>", "client");
     if (data) {
       req.session.user = data[0];
-      return res.redirect("/items");
+      return res.redirect("/dashboard");
     }
   } catch (e) {
-    console.log(e);
-    return res.redirect("/");
+    req.flash("status", "200");
+    req.flash("login", "Failed");
+    res.redirect("/");
   }
 });
 
@@ -39,6 +40,8 @@ const authChecking = (roleRequired) => {
   return (req, res, next) => {
     if (!req.session.user) return res.redirect("/");
     const { role } = req.session.user;
+    if (!roleRequired) return next();
+
     if (roleRequired !== role) {
       return res.redirect("/404");
     }

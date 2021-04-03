@@ -98,12 +98,12 @@ include('../template/navbar'); %>
 <%- include('../template/footer'); %>
 
 
-<script src="js/plugins/dataTables/datatables.min.js"></script>
-<script src="js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+<script src="/js/plugins/dataTables/datatables.min.js"></script>
+<script src="/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
 
-<script src="js/plugins/ladda/spin.min.js"></script>
-<script src="js/plugins/ladda/ladda.min.js"></script>
-<script src="js/plugins/ladda/ladda.jquery.min.js"></script>
+<script src="/js/plugins/ladda/spin.min.js"></script>
+<script src="/js/plugins/ladda/ladda.min.js"></script>
+<script src="/js/plugins/ladda/ladda.jquery.min.js"></script>
 
 <script src="/socket.io/socket.io.js"></script>
 
@@ -155,6 +155,7 @@ include('../template/navbar'); %>
     $('.btn-tambah').click(function(){
       
       $('#form-category').attr("action",`${path}`)
+      $("input[name=name]").val("")
       $('.modal-title').html("Tambah Kategori")
       $('.modal').modal("show")
     })

@@ -192,7 +192,7 @@
         `;
     }
     function getCategories(){
-      fetch("/categories/all").then((res) =>
+      fetch("/items/categories/all").then((res) =>
         res.json().then((res) => {
           let html = `<option disable selected value="">-- Pilih kategori --</option>`;
           for (let i in res) {
@@ -288,7 +288,6 @@
           imageData = imageData.filter((f) => f !== img);
           if (res.status == 200) {
             $(this).parent().parent().remove();
-            toastr.success("Gambar dihapus", "Berhasil");
           } else toastr.error("Gambar gagal dihapus", "Gagal");
         });
 

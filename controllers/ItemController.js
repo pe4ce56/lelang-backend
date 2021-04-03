@@ -1,6 +1,6 @@
 const express = require("express");
-const formidable = require("formidable");
 const routerItem = express.Router();
+const formidable = require("formidable");
 const { validationResult, body } = require("express-validator");
 const fs = require("fs");
 const util = require("util");
@@ -26,12 +26,28 @@ routerItem.get("/", async function (req, res) {
     items: [],
   };
   try {
-    let items = await knex("items");
+    let items = await knex("items")
+      .select([
+        "items.id",
+        "items.name as items_name",
+        "items.price",
+        "items.description",
+        "categories.name as category_name",
+      ])
+      .innerJoin("categories", "items.category_id", "categories.id");
     data.items = items;
+    console.log(items);
   } catch (e) {}
   res.render("pages/items/items", data);
 });
-
+routerItem.get("/categories/all", async function (req, res) {
+  try {
+    let categories = await knex("categories");
+    return res.status(200).json(categories);
+  } catch (e) {
+    return res.status(401).json({ msg: "Data gagal diambil" });
+  }
+});
 routerItem.get("/add", function (req, res) {
   const data = {
     req: req.baseUrl,
@@ -142,6 +158,9 @@ routerItem.put("/update/:id", async (req, res) => {
       folderTemp,
     } = req.body;
 
+    // console.log(images);
+    // return;
+
     const updateItem = await knex("items").where("id", id).update({
       name,
       price,
@@ -157,10 +176,22 @@ routerItem.put("/update/:id", async (req, res) => {
         const updateImage = await knex("images").insert(images);
 
         if (updateImage) {
+          // jika item sudah memliki gambar
           if (fs.existsSync(`public/items_image/${id}`)) {
-            fs.readdirSync(`public/items_image/${id}`).map((file) => {
-              if (images.some((image) => image.path !== file)) {
-                fs.unlinkSync(`public/items_image/${id}/${file}`);
+            const fileFolder = fs.readdirSync(`public/items_image/${id}`);
+
+            const imagesDeleted = fileFolder.filter((path) => {
+              return (
+                images
+                  .map(function (e) {
+                    return e.path;
+                  })
+                  .indexOf(path) < 0
+              );
+            });
+            imagesDeleted.map((path) => {
+              if (path && fs.existsSync(`public/items_image/${id}/${path}`)) {
+                fs.unlinkSync(`public/items_image/${id}/${path}`);
               }
             });
           }
@@ -190,7 +221,7 @@ routerItem.post("/uploadTemp/:idSocket", (req, res) => {
     const rand = makeid(10);
     const dir = `public/items_image/temp/${idSocket}`;
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
+      fs.mkdirSync(dir, { recursive: true });
     }
     var newpath =
       __dirname + `/../public/items_image/temp/${idSocket}/${rand}-${name}`;

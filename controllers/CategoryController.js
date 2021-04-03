@@ -31,14 +31,7 @@ routerCategory.get("/", async function (req, res) {
   } catch (e) {}
   res.render("pages/category", data);
 });
-routerCategory.get("/all", async function (req, res) {
-  try {
-    let categories = await knex("categories");
-    return res.status(200).json(categories);
-  } catch (e) {
-    return res.status(401).json({ msg: "Data gagal diambil" });
-  }
-});
+
 routerCategory.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
