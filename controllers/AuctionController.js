@@ -74,6 +74,7 @@ routerAuction.get("/detail/:id", async (req, res) => {
         "auctions.*",
         "clients.name as client_name",
         "items.name as item_name",
+        "email",
       ])
       .leftJoin("histories", "auctions.id", "histories.auction_id")
       .leftJoin("clients", "histories.client_id", "clients.id")

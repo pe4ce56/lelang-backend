@@ -47,6 +47,6 @@ routes(app);
 // socket service
 service(http);
 
-http.listen(port, () => {
+http.listen(port, "0.0.0.0", () => {
   console.log(`Server running at http://localhost:${port}`);
 });

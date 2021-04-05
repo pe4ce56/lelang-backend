@@ -79,7 +79,7 @@
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Deskripsi:</label>
                     <div class="col-sm-10">
-                      <div class="description"></div>
+                      <div class="description" ></div>
                     </div>
                   </div>
                 </form>
@@ -177,6 +177,8 @@
   <script src="/js/plugins/steps/jquery.steps.min.js"></script>
 
   <script>
+    
+    $(document).ready(function () {  
     function templateHTML({ img, url }) {
       return `<tr>
         <td>
@@ -262,20 +264,9 @@
         timeOut: 4000,
       };
 
-    $(document).ready(function () {  
       getCategories()
     
-      $(".description").summernote({
-        height: 100,
-        toolbar: [
-          // [groupName, [list of button]]
-          ["style", ["bold", "italic", "underline", "clear"]],
-          ["font", ["strikethrough", "superscript", "subscript"]],
-          ["para", ["ul", "ol", "paragraph"]],
-          ["height", ["height"]],
-        ],
-      });
-
+ 
     
       $(document).on("click", ".btn-delete", async function () {
 
@@ -321,15 +312,15 @@
                   <div class="progress">
                       <div class="progress-bar progress-bar-striped progress-bar-primary" style="width: 0%" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>`)
+                  
             const data = {
               name: $("input[name=name]").val(),
               price: $("input[name=price]").val(),
               category_id: $("select[name=category_id]").val(),
-              description: $(".description").summernote("code"),
+              description: $(".description").summernote('code'),
               images: imageData,
               folderTemp: idSocket,
             };
-
             // fetching data
            const res =  await fetch(path, {
               method: "post",
@@ -357,6 +348,7 @@
               const percentage =  receivedLength/contentLength*100
               $(".peringatan .progress-bar ").css("width",`${percentage}%`)
             }
+            console.log("test")
             setTimeout(()=>{
               
               if (res.status == 200){
@@ -380,6 +372,17 @@
           }
           
       });
+      $(".description").summernote({
+        height: 100,
+        toolbar: [
+          // [groupName, [list of button]]
+          ["style", ["bold", "italic", "underline", "clear"]],
+          ["font", ["strikethrough", "superscript", "subscript"]],
+          ["para", ["ul", "ol", "paragraph"]],
+          ["height", ["height"]],
+        ],
+      });
+
     });
   </script>
 

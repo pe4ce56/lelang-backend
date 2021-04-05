@@ -295,7 +295,7 @@
 
     // delete image temp
     $(document).on("click",".btn-delete",async function(){
-
+      const order = $(this).parent().parent().children("td").children(".sort_order").val();
       const img = $(this).data("img");
       const l = await Ladda.create(this);
       l.start();
@@ -305,6 +305,11 @@
         imageData = imageData.filter((f) => f.path !== img);
         if (res.status == 200) {
           $(this).parent().parent().remove();
+          $(".sort_order").map(function(){
+            const value = $(this).val()
+            if(value>order)
+              $(this).val(value-1);
+          })
         } else toastr.error("Gambar gagal dihapus", "Gagal");
       })
       l.stop()

@@ -131,12 +131,16 @@ include('../template/navbar'); %>
                         <input type="text" class="form-control" id="detail-status" disabled>
                      </div>
                     <div class="form-group">
-                        <label for="detail-current-bid">Penawaran Tertinggi</label>
+                        <label for="detail-current-bid" id="lbl-current-bid">Penawaran Tertinggi</label>
                         <input type="text" class="form-control" id="detail-current-bid" disabled>
                      </div>
                     <div class="form-group">
-                        <label for="detail-client-name">Nama Penawar</label>
+                        <label for="detail-client-name" id="lbl-client-name">Nama Penawar</label>
                         <input type="text" class="form-control" id="detail-client-name" disabled>
+                     </div>
+                    <div class="form-group">
+                        <label for="detail-client-email" id="lbl-client-email">Email Penawar</label>
+                        <input type="text" class="form-control" id="detail-client-email" disabled>
                      </div>
                 </div>
                 <div class="col-12 col-sm-6">
@@ -420,12 +424,26 @@ include('../template/navbar'); %>
     $(document).on('click','.btn-detail',async function(){
         const id =  $(this).data("id")
         const data = await fetch(`/auctions/detail/${id}`).then(res=>res.json()).then(res=>res)
+        console.log(data);
         $('#detail-name').val(data.item_name)
         $('#detail-start').val(renderDate(data.start_date))
         $('#detail-end').val(data.end_date?renderDate(data.end_date): "-")
         $('#detail-status').val(data.status)
         $('#detail-current-bid').val(data.current_bid? renderRupiah(data.current_bid): "-")
         $('#detail-client-name').val(data.client_name || "-")
+        $('#detail-client-email').val(data.email || "-")
+        
+        if(data.status==="close"){
+            $('#lbl-current-bid').html("Harga Akhir")
+            $('#lbl-client-name').html("Nama Pemenang")
+            $('#lbl-client-email').html("Email Pemenang")
+        }else{
+            $('#lbl-current-bid').html("Tawaran Tertinggi")
+            $('#lbl-client-name').html("Nama Penawar")
+            $('#lbl-client-email').html("Email Penawar")
+        }
+
+
         $('.table-histories').DataTable().ajax.url(`/auctions/histories/${id}`).load()
         $('#block-detail').removeClass("d-none").addClass("d-block")
         $('html, body').animate({

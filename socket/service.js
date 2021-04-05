@@ -5,11 +5,7 @@ const status = require("../utils/scheduller");
 const service = (http) => {
   const io = socketio(http, {
     cors: {
-      origin: [
-        "http://localhost:3000",
-        "http://192.168.0.183:3000",
-        "http://localhost:5000",
-      ],
+      origin: "*",
       methods: ["GET", "POST"],
     },
   });

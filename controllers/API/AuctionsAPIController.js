@@ -88,7 +88,6 @@ apiAuctions.get("/category/:category_name/:product_name", async (req, res) => {
       .andWhere("items.name", "like", `%${req.params.product_name}%`)
       .orderBy("status", "asc")
       .orderBy("auctions.id", "desc");
-    console.log(auctions);
     auctions = joinOutput(auctions);
     return res.status(200).json({ data: auctions });
   } catch (e) {
@@ -263,9 +262,15 @@ apiAuctions.get("/comments/:auction_id", async (req, res) => {
   try {
     const { auction_id } = req.params;
     let data = await knex("auctions")
-      .select(["comments.*", "auctions.start_date", "clients.name"])
+      .select([
+        "comments.*",
+        "auctions.start_date",
+        "clients.name",
+        "users.profile_image",
+      ])
       .innerJoin("comments", "comments.auction_id", "auctions.id")
       .innerJoin("clients", "comments.client_id", "clients.id")
+      .innerJoin("users", "clients.user_id", "users.id")
       .where("auctions.id", "=", auction_id)
       .orderBy("comments.created_at", "desc");
     return res.status(200).json({ data });
@@ -275,9 +280,12 @@ apiAuctions.get("/comments/:auction_id", async (req, res) => {
 });
 apiAuctions.post("/comment", authenticateToken, async (req, res) => {
   const { auction_id, client_id, text } = req.body;
-  try {
+  try { 
     await knex("comments").insert({ auction_id, client_id, text });
     return res.status(200).json({ msg: "Berhasil" });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ msg: "Terjadi Kesalahan" });
+  }
 });
 module.exports = { apiAuctions };

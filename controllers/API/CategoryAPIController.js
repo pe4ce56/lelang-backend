@@ -29,7 +29,6 @@ apiCategory.get("/home", async (req, res) => {
     if (categories.length > 2) {
       categories.slice(3, categories.length - 4);
     }
-    console.log(categories);
     return res.status(200).json({ data: categories });
   } catch (e) {
     return res.status(401).json({ msg: "Data gagal diambil" });

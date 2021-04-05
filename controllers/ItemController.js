@@ -36,7 +36,6 @@ routerItem.get("/", async function (req, res) {
       ])
       .innerJoin("categories", "items.category_id", "categories.id");
     data.items = items;
-    console.log(items);
   } catch (e) {}
   res.render("pages/items/items", data);
 });
@@ -92,8 +91,8 @@ routerItem.post("/", async (req, res) => {
             `public/items_image/${id}`
           );
         }
-        return res.status(200).json({ msg: "Data Berhasil Ditambah" });
       }
+      return res.status(200).json({ msg: "Data Berhasil Ditambah" });
     }
   } catch (e) {
     console.log(e);
@@ -247,7 +246,6 @@ routerItem.delete("/deleteImageTemp/:id/:img", (req, res) => {
 
 routerItem.delete("/:id", async (req, res) => {
   try {
-    console.log(req.params);
     const { id } = req.params;
     const deleted = await knex("items").where("id", id).delete();
     if (deleted) {

@@ -50,6 +50,7 @@ WishlistAPIRouter.post("/", async (req, res) => {
     await knex("wishlist").insert({ auction_id, client_id });
     return res.status(200).json({ msg: "Berhasil" });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({ msg: "Gagal" });
   }
 });

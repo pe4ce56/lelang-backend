@@ -6,7 +6,6 @@ const knex = require("../config/database");
 
 routerAuth.get("/", (req, res) => {
   if (req.session.user) return res.redirect("/dashboard");
-  console.log("login", req.flash());
   return res.render("auth/login", { err: req.flash("login") || "" });
 });
 
@@ -21,12 +20,16 @@ routerAuth.post("/login", async (req, res) => {
       .where("username", "=", username)
       .where("password", "=", hashPassword)
       .where("role", "<>", "client");
-    if (data) {
+    if (data.length > 0) {
       req.session.user = data[0];
       return res.redirect("/dashboard");
     }
+    req.flash("status", "401");
+    req.flash("login", "Failed");
+    res.redirect("/");
   } catch (e) {
-    req.flash("status", "200");
+    console.log(e);
+    req.flash("status", "401");
     req.flash("login", "Failed");
     res.redirect("/");
   }

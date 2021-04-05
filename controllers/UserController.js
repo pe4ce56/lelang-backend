@@ -48,7 +48,6 @@ router.post("/", async (req, res) => {
     await knex("users")
       .insert({ username, password: hashPassword, role })
       .then(async (id) => {
-        console.log(id);
         await knex("operators")
           .insert({
             user_id: id,
@@ -106,7 +105,7 @@ router.put("/update/:id", async (req, res) => {
     flashMsg(req, res, 400, "Data Gagal Diubah");
   }
   flashMsg(req, res, 200, "Data Berhasil Diubah");
-}); 
+});
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
