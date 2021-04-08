@@ -92,7 +92,7 @@ router.put("/update/:id", async (req, res) => {
       .where("id", id)
       .update({ username, role })
       .then(async () => {
-        await knex("operators").update({
+        await knex("operators").where("user_id", id).update({
           user_id: id,
           name,
           email,

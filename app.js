@@ -38,8 +38,8 @@ app.use(
 app.use(flash());
 app.use(express.static("public"));
 app.set("view engine", "ejs");
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: "100mb" }));
+app.use(bodyParser.urlencoded({ limit: "100mb", extended: false }));
 app.use(methodOverride("_method"));
 
 routes(app);

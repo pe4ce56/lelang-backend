@@ -141,7 +141,7 @@
         </div>
         <div class="modal-body">
           <form
-            action="/items/uploamp"
+            action="/items/uploadTemp"
             method="POST"
             class="dropzone"
             id="dropzoneForm"
@@ -178,7 +178,6 @@
 
   <script>
     
-    $(document).ready(function () {  
     function templateHTML({ img, url }) {
       return `<tr>
         <td>
@@ -214,16 +213,19 @@
       dropzoneUrl = `/items/uploadTemp/${socket.id}`;
     });
 
+
     Dropzone.options.dropzoneForm = {
       addRemoveLinks: true,
       paramName: "file", // The name that will be used to transfer the file
       maxFilesize: 2, // MB,
       init: function () {
         this.on("processing", function (file) {
+          console.log(file)
           this.options.url = dropzoneUrl;
         });
       },
       accept: function (file, done) {
+        console.log(file)
         const extension = file.name.split(".");
         const listExtension = ["jpg", "png","jpeg"];
         const image = listExtension.includes(extension[extension.length - 1]);
@@ -247,6 +249,7 @@
           $("#modal-dropzone").modal("hide");
         }
       },
+      
       removedfile: function (file) {
         var name = file.name;
         var _ref;
@@ -257,6 +260,7 @@
       dictDefaultMessage:
         "<strong>Drop files here or click to upload. </strong>",
     };
+    
     toastr.options = {
         closeButton: true,
         progressBar: true,
@@ -264,10 +268,10 @@
         timeOut: 4000,
       };
 
+    $(document).ready(function () {  
+      
+      
       getCategories()
-    
- 
-    
       $(document).on("click", ".btn-delete", async function () {
 
         const l = await Ladda.create(this);

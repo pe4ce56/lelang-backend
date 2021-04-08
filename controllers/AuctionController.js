@@ -5,8 +5,9 @@ const routerAuction = express.Router();
 const { validationResult, body } = require("express-validator");
 const { select } = require("../config/database");
 const knex = require("../config/database");
+const { authChecking } = require("./AuthController");
 
-routerAuction.get("/", async (req, res) => {
+routerAuction.get("/", authChecking(), async (req, res) => {
   const data = {
     req: req.baseUrl,
   };
@@ -17,7 +18,7 @@ routerAuction.get("/", async (req, res) => {
     return res.status(400).msg({ msg: "Kesalahan mengambil data" });
   }
 });
-routerAuction.get("/find/:id", async (req, res) => {
+routerAuction.get("/find/:id", authChecking(), async (req, res) => {
   const { id } = req.params;
   try {
     const data = await knex("items")
@@ -29,7 +30,7 @@ routerAuction.get("/find/:id", async (req, res) => {
     console.log(e);
   }
 });
-routerAuction.post("/", async (req, res) => {
+routerAuction.post("/", authChecking(), async (req, res) => {
   const data = {
     item_id: req.body.item_id,
     operator_id: 9,
@@ -48,7 +49,7 @@ routerAuction.post("/", async (req, res) => {
     return res.status(400).json({ msg: e });
   }
 });
-routerAuction.put("/:id", async (req, res) => {
+routerAuction.put("/:id", authChecking(), async (req, res) => {
   const data = {
     item_id: req.body.item_id,
     operator_id: 9,
@@ -66,7 +67,7 @@ routerAuction.put("/:id", async (req, res) => {
   }
 });
 
-routerAuction.get("/detail/:id", async (req, res) => {
+routerAuction.get("/detail/:id", authChecking(), async (req, res) => {
   try {
     const { id } = req.params;
     let data = await knex("auctions")
@@ -87,7 +88,7 @@ routerAuction.get("/detail/:id", async (req, res) => {
     return res.status(400).json({ msg: e });
   }
 });
-routerAuction.get("/histories/:id", async (req, res) => {
+routerAuction.get("/histories/:id", authChecking(), async (req, res) => {
   try {
     const { id } = req.params;
     let data = await knex("auctions")
@@ -108,7 +109,7 @@ routerAuction.get("/histories/:id", async (req, res) => {
   }
 });
 
-routerAuction.put("/close/:id", async (req, res) => {
+routerAuction.put("/close/:id", authChecking(), async (req, res) => {
   const { id } = req.params;
   try {
     const data = await knex("histories")
@@ -130,7 +131,7 @@ routerAuction.put("/close/:id", async (req, res) => {
     return res.status(400).json({ msg: "Gagal" });
   }
 });
-routerAuction.delete("/:id", async (req, res) => {
+routerAuction.delete("/:id", authChecking(), async (req, res) => {
   const { id } = req.params;
   try {
     await knex("auctions").where("id", id).delete();
@@ -140,7 +141,7 @@ routerAuction.delete("/:id", async (req, res) => {
   }
 });
 
-routerAuction.get("/api/auctions", async (req, res) => {
+routerAuction.get("/api/auctions", authChecking(), async (req, res) => {
   const data = {};
   try {
     data.data = await knex("items").innerJoin(
@@ -153,7 +154,7 @@ routerAuction.get("/api/auctions", async (req, res) => {
     return res.status(400).json({ msg: "Data tidak ada" });
   }
 });
-routerAuction.get("/api/items", async (req, res) => {
+routerAuction.get("/api/items", authChecking(), async (req, res) => {
   const data = {};
   try {
     data.data = await knex("items").whereNotExists(function () {

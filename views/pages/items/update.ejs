@@ -212,6 +212,7 @@
   const socket = io();
   socket.on("connect", () => {
     idSocket = socket.id;
+    console.log(idSocket)
     dropzoneUrl = `/items/uploadTemp/${socket.id}`;
   });
   // dropzone Setting

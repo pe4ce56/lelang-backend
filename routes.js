@@ -22,11 +22,11 @@ module.exports = (app) => {
 
   app.use("/", routerAuth);
   app.use("/dashboard", authChecking(), routerDashboard);
-  app.use("/auctions", authChecking("operator"), routerAuction);
+  app.use("/auctions", routerAuction);
   app.use("/items", authChecking(), routerItem);
   app.use("/categories", authChecking("admin"), routerCategory);
   app.use("/users", authChecking("admin"), routerUser);
-  app.use("/profile", routerProfiie);
+  // app.use("/profile", routerProfiie);
 
   // API
 

@@ -1,5 +1,6 @@
 <%- include('../template/header'); %> <%- include('../template/sidebar'); %> <%-
 include('../template/navbar'); %>
+
 <div class="row wrapper border-bottom white-bg page-heading">
   <div class="col-lg-10">
     <h2>Laporan</h2>
@@ -24,15 +25,15 @@ include('../template/navbar'); %>
                 style="width: 100%"
             >
                 <thead>
-                <tr>
-                    <th style="width:4%">No</th>
-                    <th>Operator</th>
-                    <th>Nama Barang</th>
-                    <th>Tanggal Mulai</th>
-                    <th>Tanggal Berakhir</th>
-                    <th>Pemenang</th>
-                    <th>Harga Akhir</th>
-                </tr>
+                  <tr>
+                      <th style="width:4%">No</th>
+                      <th>Operator</th>
+                      <th>Nama Barang</th>
+                      <th>Tanggal Mulai</th>
+                      <th>Tanggal Berakhir</th>
+                      <th>Pemenang</th>
+                      <th>Harga Akhir</th>
+                  </tr>
                 </thead>
                 <tbody>         
                     <% for(let i in auctions){%>
@@ -48,17 +49,17 @@ include('../template/navbar'); %>
                     <% } %>
                 </tbody>
                 <tfoot>
-                <tr>
-                    <tr>
-                    <th></th>
-                    <th>Operator</th>
-                    <th>Nama Barang</th>
-                    <th>Tanggal Mulai</th>
-                    <th>Tanggal Berakhir</th>
-                    <th>Pemenang</th>
-                    <th>Harga Akhir</th>
-                    </tr>
-                </tr>
+                  <tr>
+                      <tr>
+                      <th></th>
+                      <th>Operator</th>
+                      <th>Nama Barang</th>
+                      <th>Tanggal Mulai</th>
+                      <th>Tanggal Berakhir</th>
+                      <th>Pemenang</th>
+                      <th>Harga Akhir</th>
+                      </tr>
+                  </tr>
                 </tfoot>
             </table>
         </div>
@@ -98,6 +99,8 @@ include('../template/navbar'); %>
     } )
     table.buttons().container()
     .appendTo( $('div.eight.column:eq(0)', table.table().container()) );
+    $('.sixteen.wide.column').css("width","100%")
   })
-</script>
+  
+  </script>
 <%- include('../template/htmlClose'); %>

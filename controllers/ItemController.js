@@ -213,6 +213,7 @@ routerItem.put("/update/:id", async (req, res) => {
 });
 routerItem.post("/uploadTemp/:idSocket", (req, res) => {
   const { idSocket } = req.params;
+  console.log("test");
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
     if (err) throw err;

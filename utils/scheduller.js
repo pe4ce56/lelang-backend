@@ -1,8 +1,8 @@
 const schedule = require("node-schedule");
 const knex = require("../config/database");
 const status = (io, socket) =>
-// */5 * * * * *
-  schedule.scheduleJob("10 * * * *", async () => {
+  // */5 * * * * *
+  schedule.scheduleJob("*/5 * * * * *", async () => {
     try {
       const close = await knex("auctions")
         .where("end_date", "<", knex.fn.now())

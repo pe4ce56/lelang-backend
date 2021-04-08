@@ -62,25 +62,20 @@ AuthAPIRouter.put("/edit/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const { username, name, email, place_of_birth, date_of_birth } = req.body;
-    const query = await knex("users")
+    const user_id = await knex("users")
       .where("users.id", "=", id)
-      .update({ username })
-      .then(async (user_id) => {
-        if (user_id) {
-          await knex("clients")
-            .where("clients.user_id", "=", id)
-            .update({
-              name,
-              email,
-              place_of_birth,
-              date_of_birth,
-            })
-            .then(async (client_id) => {
-              if (client_id)
-                return res.status(200).json({ msg: "Berhasil Diubah" });
-            });
-        }
-      });
+      .update({ username });
+    if (user_id) {
+      const client_id = await knex("clients")
+        .where("clients.user_id", "=", id)
+        .update({
+          name,
+          email,
+          place_of_birth,
+          date_of_birth,
+        });
+      if (client_id) return res.status(200).json({ msg: "Berhasil Diubah" });
+    }
 
     return res.status(400).json({ msg: "Gagal Diubah" });
   } catch (e) {
@@ -95,6 +90,7 @@ AuthAPIRouter.patch(
     try {
       const { id } = req.params;
       const { image, username, imageName } = req.body;
+      // console.log(image);
       const fileContents = image.split(";base64,").pop();
       const fileName = `${username}${makeid(10)}.png`;
 
@@ -114,6 +110,7 @@ AuthAPIRouter.patch(
         .update({ profile_image: fileName });
       return res.status(200).json({ image: fileName });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ msg: "Gagal Diubah" });
     }
   }
