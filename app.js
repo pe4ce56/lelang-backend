@@ -11,7 +11,7 @@ const routes = require("./routes");
 const service = require("./socket/service");
 const maintenance = require("./utils/maintenance");
 maintenance();
-const port = 3000;
+const port = 5000;
 
 var corsOptions = {
   origin: [
